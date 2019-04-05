@@ -66,6 +66,7 @@ export class UserDetailComponent implements OnInit {
 
   onSubmit() {
     this.userService.saved = true;
+    this.back();
   }
 
   onBlur(url: string) {
