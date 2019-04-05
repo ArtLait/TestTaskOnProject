@@ -29,10 +29,11 @@ export class SearchUsersComponent implements OnInit {
   ngOnInit() {
     this.queryInput.nativeElement.focus();
 
-    const lastIdSearch = this.userService.lastIdSearch;
+    const { lastIdSearch, lastPage, lastNameSearch} = this.userService;
 
     if (lastIdSearch)  {
-      this.query = this.userService.lastNameSearch;
+      this.query = lastNameSearch;
+      this.page = lastPage - 1;
       this.users = this.userService.cashedUsersDetailArr[lastIdSearch];
     } else {
       const storage = localStorage.getItem('lastQuery');
