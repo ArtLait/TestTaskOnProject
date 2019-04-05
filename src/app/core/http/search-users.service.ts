@@ -1,53 +1,58 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, forkJoin, Subject } from "rxjs";
-import { map } from "rxjs/operators";
-import { User, UsersResponse, UserDetail } from "../../shared/User";
-import { NotifierService } from "angular-notifier";
+import { Observable, forkJoin, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { User, UsersResponse, UserDetail } from '../../shared/User';
+import { NotifierService } from 'angular-notifier';
+import {environment} from '../../../environments/environment';
 
 @Injectable({providedIn: 'root'})
-export class SearchUsersService {
-    url: string = 'https://api.github.com/';
+export class SearchUsersService {;
     cashedUsersDetail: any = {};
     cashedUsersDetailArr: any = {};
     lastIdSearch: string;
     lastNameSearch: string;
-    usersDetail$ = new Subject<UserDetail[]>();
+    lastPage: number;
 
     constructor(private http: HttpClient, private notifier: NotifierService) {}
 
     getUsers(userName, perPage = 10, page = 1): Observable<User[]> {
-        return this.http.get<User[]>(`${this.url}search/users?q=${userName}&per_page=${perPage}&page=${page}`)
+        return this.http.get<User[]>(`${environment.host}search/users?q=${userName}&per_page=${perPage}&page=${page}`)
         .pipe(map((res: UsersResponse) => (res.items)));
     }
 
     getUsersDetail(userName, perPage = 10, page = 1): Observable<UserDetail[]> {
+      const usersDetail$ = new Subject<UserDetail[]>();
         this.lastNameSearch = userName;
         this.lastIdSearch = userName + perPage + page;
+        this.lastPage = page;
+        localStorage.setItem('lastQuery', this.lastNameSearch);
         const cashed = this.cashedUsersDetailArr[this.lastIdSearch];
         if (cashed) {
-            this.usersDetail$.next(cashed);
-        }
-        else {
-            this.getUsers(userName, perPage, page).subscribe((users: User[]) => {
-                let userDetailsOf = [];
-                users.forEach((item) => {
-                    userDetailsOf.push(this.getUserDetail(item.login));
-                });
-                forkJoin(...userDetailsOf).subscribe((usersDetail: UserDetail[]) => {
-                    this.casheUsersDetail(usersDetail, userName, perPage, page);
-                    this.usersDetail$.next(usersDetail);
-                },
-                (err) => {
-                    const message = err && err.message;
-                    this.notifier.notify('error', message);
-                    let weakUsers: UserDetail[] = <UserDetail[]>users;
-                    this.usersDetail$.next(weakUsers);
-                }
-                );
+          console.log('if');
+          usersDetail$.next(cashed);
+        } else {
+          console.log('else');
+          this.getUsers(userName, perPage, page).subscribe((users: User[]) => {
+            const userDetailsOf = [];
+            users.forEach((item) => {
+                userDetailsOf.push(this.getUserDetail(item.login));
+            });
+            forkJoin(...userDetailsOf).subscribe((usersDetail: UserDetail[]) => {
+                this.casheUsersDetail(usersDetail, userName, perPage, page);
+                usersDetail$.next(usersDetail);
+            },
+            (err) => {
+                const message = err && err.message;
+                this.notifier.notify('error', message);
+                const weakUsers: UserDetail[] = <UserDetail[]>users;
+                usersDetail$.next(weakUsers);
+            });
+            }, (err) => {
+              this.notifier.notify('error', err && err.message);
             });
         }
-        return this.usersDetail$;
+        return usersDetail$;
     }
 
     casheUsersDetail(usersDetail: UserDetail[], name: string, perPage: number, page: number) {
@@ -58,6 +63,6 @@ export class SearchUsersService {
     }
 
     getUserDetail(userName): Observable<UserDetail> {
-        return this.http.get<UserDetail>(`${this.url}users/${userName}`);
+        return this.http.get<UserDetail>(`${environment.host}users/${userName}`);
     }
 }

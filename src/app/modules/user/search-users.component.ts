@@ -3,7 +3,6 @@ import { UserDetail, User } from 'src/app/shared/User';
 import { SearchUsersService } from 'src/app/core/http/search-users.service';
 import { UserService } from 'src/app/core/services/user.detail.service';
 import { Router } from '@angular/router';
-import { PreviousRouteService } from 'src/app/core/services/previousRoute.service';
 import { NotifierService } from 'angular-notifier';
 
 @Component({
@@ -14,43 +13,44 @@ import { NotifierService } from 'angular-notifier';
 export class SearchUsersComponent implements OnInit {
   @ViewChild('queryInput')
   queryInput: ElementRef;
-  query: string = '';
+  query = '';
   users: UserDetail[];
-  countOfRows: number = 10;
-  page: number = 0;
-  defaultImgPath: string = './assets/empty.png';
-  loading: boolean = false;
-  currentUrl: string;
-  previousUrl: string;
+  countOfRows = 10;
+  page = 0;
+  loading = false;
 
   constructor(
     private userService: SearchUsersService,
     private userDetailService: UserService,
     private router: Router,
-    private previousRoute: PreviousRouteService,
     private notifier: NotifierService
   ) {}
 
   ngOnInit() {
     this.queryInput.nativeElement.focus();
-    if (this.previousRoute.getPreviousUrl().slice(0, 6) == '/user/') {
-      this.userDetailService.showAlertAboutUnsavedChanges();
-    }
 
     const lastIdSearch = this.userService.lastIdSearch;
 
     if (lastIdSearch)  {
       this.query = this.userService.lastNameSearch;
       this.users = this.userService.cashedUsersDetailArr[lastIdSearch];
+    } else {
+      const storage = localStorage.getItem('lastQuery');
+      this.query = storage ? storage : '';
+      if (this.query) { this.search(); }
     }
   }
 
-  search() {
-    if (this.query.length === 0) return;
+  search(page = 0) {
+    console.log('search');
+    if (this.query.length === 0) { return; }
     this.loading = true;
-    this.userService.getUsersDetail(this.query, undefined, this.page + 1).subscribe((usersDetail: UserDetail[])=>{
+    this.userService.getUsersDetail(this.query, undefined,  page + 1)
+      .subscribe((usersDetail: UserDetail[]) => {
+        console.log('subscribe');
       this.users = usersDetail;
       this.loading = false;
+      this.page = page;
     },
     err => {
       this.notifier.notify('error', err);

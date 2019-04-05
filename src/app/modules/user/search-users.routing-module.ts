@@ -2,22 +2,27 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SearchUsersComponent } from './search-users.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
-import { PreviousRouteService } from 'src/app/core/services/previousRoute.service';
+import { UserDetailResolverService } from './user-detail/user-detail.resolver';
+import {SearchUsersGuard} from '../../core/guards/search-users.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: SearchUsersComponent
+    component: SearchUsersComponent,
+    canActivate: [SearchUsersGuard]
   },
   {
     path: 'user/:name',
-    component: UserDetailComponent
+    component: UserDetailComponent,
+    resolve: {
+      userDetail: UserDetailResolverService
+    }
   }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [PreviousRouteService]
+  providers: []
 })
 export class SearchUsersRoutingModule {}

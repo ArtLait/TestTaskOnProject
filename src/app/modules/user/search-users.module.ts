@@ -15,11 +15,14 @@ import {TabViewModule} from 'primeng/tabview';
 import {CodeHighlighterModule} from 'primeng/codehighlighter';
 import {DataViewModule} from 'primeng/dataview';
 import { UserDetailComponent } from './user-detail/user-detail.component';
+import { UserDetailResolverService } from './user-detail/user-detail.resolver';
+import {PaginatorComponent} from '../../shared/components/paginator/paginator.component';
 
 @NgModule({
   declarations: [
     SearchUsersComponent,
-    UserDetailComponent
+    UserDetailComponent,
+    PaginatorComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +39,6 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
     DataViewModule,
     MessageModule
   ],
-  providers: []
+  providers: [UserDetailResolverService]
 })
 export class SearchUsersModule { }

@@ -1,16 +1,16 @@
 <div class="btn-container">
-  <button type="text" pButton label="back" (click)="back()"></button>
+    <button type="text" pButton label="back" (click)="back()"></button>
 </div>
 <div class="img-container">
-  <img class="img" [src]="userDetail && userDetail.avatar_url" onError="this.src='./assets/empty.png'">
+    <img class="img" [src]="userDetail && userDetail.avatar_url" onError="src='./assets/empty.png'">
 </div>
 <form class="userDetail-container" [formGroup]="userDetailForm" (ngSubmit)="onSubmit()">
 
-      <input type="text" (blur)="onBlur(url.value)" pInputText formControlName="url" placeholder="Enter url for image..." #url>
-      <input type="text" pInputText formControlName="firstName" placeholder="Enter firstName...">
-      <input type="text" pInputText formControlName="lastName" placeholder="Enter lastName...">
-      <input type="text" pInputText formControlName="email" placeholder="Enter email...">
-      <p-message severity="error" style="margin-top: 5px;" class="ng-star-inserted" [text]="error" *ngIf="error.length > 0"></p-message>
-      
-      <button class="btn-text" type="submit" pButton [disabled]="!userDetailForm.valid" label="Submit"></button>
+    <input type="text" (blur)="onBlur(url.value)" pInputText formControlName="url" placeholder="Enter url for image..." #url>
+    <input type="text" pInputText formControlName="firstName" placeholder="Enter firstName...">
+    <input type="text" pInputText formControlName="lastName" placeholder="Enter lastName...">
+    <input type="text" pInputText formControlName="email" placeholder="Enter email...">
+    <p-message severity="error" style="margin-top: 5px;" class="ng-star-inserted" [text]="error" *ngIf="!userDetailForm.valid"></p-message>
+  
+    <button class="btn-text" type="submit" pButton [disabled]="!userDetailForm.valid" label="Submit"></button>
 </form>

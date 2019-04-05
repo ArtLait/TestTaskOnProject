@@ -1,49 +1,46 @@
 <div class="ui-g ui-fluid">
-    <div class="ui-g-12 ui-md-4">
-        <div class="ui-inputgroup">
-            <button pButton type="button" label="Search" [disabled]="query == 0" (click)="search()"></button>
-            <input type="text" (keyup.enter)="search()" [(ngModel)]="query" pInputText placeholder="Enter name..." #queryInput>         
-        </div>
+  <div class="ui-g-12 ui-md-4">
+    <div class="ui-inputgroup">
+      <button pButton type="button" label="Search" [disabled]="query == 0" (click)="search()"></button>
+      <input type="text" (keyup.enter)="search()" [(ngModel)]="query" pInputText placeholder="Enter name..." #queryInput>
     </div>
+  </div>
 </div>
 
 <div class="ui-dataview ui-widget ui-dataview-list">
-    <p-dataView [value]="users" [paginator]="false" [rows]="countOfRows" [loading]="loading">
-        <ng-template  let-user pTemplate="listItem">
-            <div class="ui-dataview-content ui-widget-content">
-                <div class="ui-g">
-                    <div class="ui-g ng-star-inserted">
-                        <div class="ui-g-12 ui-md-3" >
-                            <img class="img-container pointer" [routerLink]="['user', user.login]"
-                                [src]="user && user.avatar_url" onError="this.src='./assets/empty.png'">
-                        </div>
-                    </div>
-                    
-                    <div class="ui-g-12 ui-md-8">
-                        <div class="ui-g">
-                            <div class="ui-g-2 ui-sm-6">FirstName</div>
-                            <div class="ui-g-10 ui-sm-6 pointer" [routerLink]="['user', user.login]">
-                                    <b>{{user.name && user.name.split(' ')[0]}}</b>
-                            </div>
-
-                            <div class="ui-g-2 ui-sm-6">Last name</div>
-                            <div class="ui-g-10 ui-sm-6">
-                                    <b>{{user.name && user.name.split(' ')[1]}}</b>
-                            </div>
-
-                            <div class="ui-g-2 ui-sm-6">Created date</div>
-                            <div class="ui-g-10 ui-sm-6">
-                                    <b>{{user.created_at | date:"dd/mm/yyyy hh:mm"}}</b>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
+  <p-dataView [value]="users" [paginator]="false" [rows]="countOfRows" [loading]="loading">
+    <ng-template  let-user pTemplate="listItem">
+      <div class="ui-dataview-content ui-widget-content">
+        <div class="ui-g">
+          <div class="ui-g ng-star-inserted">
+            <div class="ui-g-12 ui-md-3" >
+                <img class="img-container pointer" [routerLink]="['user', user.login]"
+                    [src]="user && user.avatar_url" onError="this.src='./assets/empty.png'">
             </div>
-        </ng-template>
-    </p-dataView>
-    <ng-template #loadingTemplate>
-        <img src="./assets/loading.gif" >
+          </div>
+
+          <div class="ui-g-12 ui-md-8">
+            <div class="ui-g">
+              <div class="ui-g-2 ui-sm-6">FirstName</div>
+              <div class="ui-g-10 ui-sm-6 pointer" [routerLink]="['user', user.login]">
+                      <b>{{user.name && user.name.split(' ')[0]}}</b>
+              </div>
+
+              <div class="ui-g-2 ui-sm-6">Last name</div>
+              <div class="ui-g-10 ui-sm-6">
+                      <b>{{user.name && user.name.split(' ')[1]}}</b>
+              </div>
+
+              <div class="ui-g-2 ui-sm-6">Created date</div>
+              <div class="ui-g-10 ui-sm-6">
+                      <b>{{user.created_at | date:"dd/mm/yyyy hh:mm"}}</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </ng-template>
-    
-    <p-paginator [rows]="countOfRows" [totalRecords]="100" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>
+  </p-dataView>
+    <app-paginator (loadData)="search($event)" [currentPage]="page" [countOfRows]="countOfRows" [pageLinkSize]="3" ></app-paginator>
+    <p-paginator [rows]="countOfRows" [totalRecords]="1000" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>
 </div>

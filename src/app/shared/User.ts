@@ -4,8 +4,9 @@ export class User {
     node_id?: string;
     avatar_url: string;
     userDetail: UserDetail;
-    name?:string = '';
-    created_at?: string = '';
+    name = '';
+    created_at = '';
+    email = '';
 }
 
 export class UserDetail {
@@ -13,6 +14,7 @@ export class UserDetail {
     name: string;
     login: string;
     created_at: string;
+    email: string;
 }
 
 export class UsersResponse {
