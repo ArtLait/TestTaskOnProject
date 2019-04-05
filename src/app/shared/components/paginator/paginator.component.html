@@ -1,16 +1,16 @@
 <div class="ui-paginator ui-widget ui-widget-header ui-unselectable-text ui-helper-clearfix">
   <a class="ui-paginator-prev ui-paginator-element ui-state-default ui-corner-all"
-    (click)="prev()" [ngClass]="{'ui-state-disabled': countOfList === 0}">
+    (click)="prev()" [ngClass]="{'ui-state-disabled': firstCurrentIndex === 0}">
     <span class="ui-paginator-icon pi pi-caret-left"></span>
   </a>
   <span class="ui-paginator-pages">
     <ng-container *ngFor="let item of pages; let i = index">
       <a class="ui-paginator-page ui-paginator-element ui-state-default ui-corner-all"
-         [ngClass]="{'ui-state-active': i  === currentPage}" (click)="paginate(i + countOfList)">{{i + countOfList}}</a>
+         [ngClass]="{'ui-state-active': i + firstCurrentIndex === currentPage}" (click)="paginate(i + firstCurrentIndex)">{{i + firstCurrentIndex}}</a>
     </ng-container>
     </span>
-  <a class="ui-paginator-prev ui-paginator-element ui-state-default ui-corner-all ui-state-disabled"
-      (click)="next()" [ngClass]="{'ui-state-disabled': countOfList === countOfRows}">
+  <a class="ui-paginator-prev ui-paginator-element ui-state-default ui-corner-all"
+      (click)="next()">
     <span class="ui-paginator-icon pi pi-caret-right"></span>
   </a>
 </div>

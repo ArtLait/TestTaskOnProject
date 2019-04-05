@@ -16,24 +16,23 @@ export class PaginatorComponent implements OnInit {
   currentPage = 0;
   @Output() loadData = new EventEmitter();
   pages = new Array(this.pageLinkSize);
-  get countOfList(): number {
-    return Math.floor(this.currentPage / this.pageLinkSize);
+  get firstCurrentIndex(): number {
+    return Math.floor(this.currentPage / this.pageLinkSize) * this.pageLinkSize;
   }
 
   constructor(private search: SearchUsersService) {}
   ngOnInit() {}
   next() {
-    const currentPage = this.currentPage + this.pageLinkSize - (this.currentPage % this.pageLinkSize);
-    this.loadData.emit(this.currentPage);
-    console.log('currentPage', currentPage);
+      const currentPage = this.currentPage + this.pageLinkSize - (this.currentPage % this.pageLinkSize);
+      this.loadData.emit(currentPage);
   }
   prev() {
-    const currentPage = this.currentPage - this.pageLinkSize - (this.currentPage % this.pageLinkSize);
-    this.loadData.emit(currentPage);
-    console.log('currentPage', currentPage);
+    if (this.firstCurrentIndex !== 0) {
+      const currentPage = this.currentPage - this.pageLinkSize - (this.currentPage % this.pageLinkSize);
+      this.loadData.emit(currentPage);
+    }
   }
   paginate(i: number) {
-    console.log('i', i);
     this.loadData.emit(i);
   }
 }

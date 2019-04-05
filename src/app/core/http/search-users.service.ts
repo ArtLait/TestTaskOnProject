@@ -5,9 +5,10 @@ import { map } from 'rxjs/operators';
 import { User, UsersResponse, UserDetail } from '../../shared/User';
 import { NotifierService } from 'angular-notifier';
 import {environment} from '../../../environments/environment';
+import {of} from 'rxjs/internal/observable/of';
 
 @Injectable({providedIn: 'root'})
-export class SearchUsersService {;
+export class SearchUsersService {
     cashedUsersDetail: any = {};
     cashedUsersDetailArr: any = {};
     lastIdSearch: string;
@@ -29,10 +30,8 @@ export class SearchUsersService {;
         localStorage.setItem('lastQuery', this.lastNameSearch);
         const cashed = this.cashedUsersDetailArr[this.lastIdSearch];
         if (cashed) {
-          console.log('if');
-          usersDetail$.next(cashed);
+          return of(cashed);
         } else {
-          console.log('else');
           this.getUsers(userName, perPage, page).subscribe((users: User[]) => {
             const userDetailsOf = [];
             users.forEach((item) => {
@@ -58,7 +57,7 @@ export class SearchUsersService {;
     casheUsersDetail(usersDetail: UserDetail[], name: string, perPage: number, page: number) {
         this.cashedUsersDetailArr[this.lastIdSearch] = usersDetail;
         usersDetail.forEach((userDetail: UserDetail) => {
-            if(userDetail.login) this.cashedUsersDetail[userDetail.login] = userDetail;
+            if (userDetail.login) { this.cashedUsersDetail[userDetail.login] = userDetail; };
         });
     }
 

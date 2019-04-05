@@ -42,12 +42,10 @@ export class SearchUsersComponent implements OnInit {
   }
 
   search(page = 0) {
-    console.log('search');
     if (this.query.length === 0) { return; }
     this.loading = true;
     this.userService.getUsersDetail(this.query, undefined,  page + 1)
       .subscribe((usersDetail: UserDetail[]) => {
-        console.log('subscribe');
       this.users = usersDetail;
       this.loading = false;
       this.page = page;
@@ -55,10 +53,5 @@ export class SearchUsersComponent implements OnInit {
     err => {
       this.notifier.notify('error', err);
     });
-  }
-
-  paginate(event) {
-    this.page = event.page;
-    this.search();
   }
 }
